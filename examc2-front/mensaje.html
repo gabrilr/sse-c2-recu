@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunicate</title>
+</head>
+<body>
+    <script>
+        function send(){
+            const newUrl = 'http://localhost:3000/mensaje';
+            
+            var perfil = document.getElementById("perfil").value;
+            var mensaje = document.getElementById('mensaje').value;
+
+            try {
+                // Enviar mensaje
+                const response = fetch(newUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        perfil,
+                        mensaje
+                    })
+                });
+
+                if (!response) {
+                    throw new Error('Failed to send message');
+                }
+                alert('Mensaje enviado a lista de '+ perfil);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                res.status(500).json({ success: false, error: 'Failed to send message' });
+            }
+        }
+    
+    </script>
+    <div style="width: 100%; text-align: center;">
+        <h1>Cliente 1: Mensaje</h1>
+
+        <input type="text" name="mensaje" id="mensaje">
+        <select id="perfil">
+            <option value="0" disabled>Selecciona un perfil</option>
+            <option value="maestro" >Maestro</option>
+            <option value="alumno">Alumno</option>
+        </select>
+        <button id="subs" onclick="send()">Enviar mensaje</button>
+    </div>
+</body>
+</html>

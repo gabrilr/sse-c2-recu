@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes</title>
+</head>
+<body>
+    <script>
+        let sub;
+        function subscribeToSSE() {
+            const source = new EventSource("http://localhost:3000/mensaje");
+
+            source.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                //console.log(data)
+                document.getElementById('docente').textContent = 'Mensaje Docente';
+                document.getElementById('alumno').textContent = 'Mensaje Alumno';
+                for (const d of data.message) {
+            
+                    var da = d.split(":");
+                    console.log(da);
+                    
+                    if(da[0] == 'maestro'){
+                        var li = document.createElement('li');
+                        var tex = document.createTextNode(da[1]);
+                        li.appendChild(tex);
+                        document.getElementById('docente').appendChild(li);
+                        //doc += da[1]
+                    } else {
+                        
+                        var li = document.createElement('li');
+                        var tex = document.createTextNode(da[1]);
+                        li.appendChild(tex);
+                        document.getElementById('alumno').appendChild(li);
+                    }
+                    
+                }
+            };
+            document.getElementById('subs').textContent = "Subscrito";
+
+            source.onerror = function() {
+                console.error('Error de conexión SSE');
+            };
+        }
+
+    </script>
+    
+    <button id="subs" onclick="subscribeToSSE()">Suscribirse para recibir mensajes</button>
+    
+    <div style="width: 100%; display: flex;">
+        <div style="width: 100%; display: flex; justify-content: center; font-size: xx-large;">
+            <ul id="docente" >
+                <li>Mensaje Docentes</li>
+            </ul>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: center; font-size: xx-large;">
+            <ul id="alumno" >
+                <li>Mensaje Alumnos</li>
+            </ul>
+        </div>
+    </div>
+    
+
+</body>
+</html>
